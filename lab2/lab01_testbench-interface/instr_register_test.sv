@@ -15,7 +15,8 @@ module instr_register_test
    output opcode_t       opcode,
    output address_t      write_pointer,
    output address_t      read_pointer,
-   input  instruction_t  instruction_word
+   input  instruction_t  instruction_word,
+   input operand_t result,
   );
 
   timeunit 1ns/1ns;
@@ -84,6 +85,7 @@ module instr_register_test
     $display("  opcode = %0d (%s)", opcode, opcode.name);
     $display("  operand_a = %0d",   operand_a);
     $display("  operand_b = %0d\n", operand_b);
+    $display("  result = %0d\n", result);
   endfunction: print_transaction
 
   function void print_results;
@@ -91,6 +93,7 @@ module instr_register_test
     $display("  opcode = %0d (%s)", instruction_word.opc, instruction_word.opc.name);
     $display("  operand_a = %0d",   instruction_word.op_a);
     $display("  operand_b = %0d\n", instruction_word.op_b);
+    $display("  result = %0d\n", instruction_word.res);
   endfunction: print_results
 
 endmodule: instr_register_test

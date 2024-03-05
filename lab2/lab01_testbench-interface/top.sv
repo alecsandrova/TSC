@@ -19,6 +19,7 @@ module top;
   operand_t      operand_a, operand_b;
   address_t      write_pointer, read_pointer;
   instruction_t  instruction_word;
+  operand_t result;
 
   // instantiate testbench and connect ports
   instr_register_test test (
@@ -31,6 +32,7 @@ module top;
     .write_pointer(write_pointer),
     .read_pointer(read_pointer),
     .instruction_word(instruction_word)
+    .result(result)
    );
 
   // instantiate design and connect ports
@@ -44,12 +46,13 @@ module top;
     .write_pointer(write_pointer),
     .read_pointer(read_pointer),
     .instruction_word(instruction_word)
+    .result(result)
    );
 
   // clock oscillators
-  initial begin // se executa odata cu timpul de simulare 0
+  initial begin //simulation time 9
     clk <= 0;
-    forever #5  clk = ~clk; // la 5 unitati de timp
+    forever #5  clk = ~clk; // 5 u.m. time
   end
 
   initial begin

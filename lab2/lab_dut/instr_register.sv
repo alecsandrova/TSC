@@ -16,20 +16,33 @@ import instr_register_pkg::*;  // user-defined types are defined in instr_regist
  input  opcode_t       opcode,
  input  address_t      write_pointer,
  input  address_t      read_pointer,
- output instruction_t  instruction_word
+ output instruction_t  instruction_word,
+ output operand_t result //added result
 );
+
   timeunit 1ns/1ns;
 
-  instruction_t  iw_reg [0:31];  // an array of instruction_word structures // daca erau invers era registru 
+  instruction_t  iw_reg [0:31];  // an array of instruction_word structures // [31:0] -> register
 
   // write to the register
   always@(posedge clk, negedge reset_n)   // write into register
     if (!reset_n) begin
       foreach (iw_reg[i])
-        iw_reg[i] = '{opc:ZERO,default:0};  // reset to all zeros // default -> celalalte 
+        iw_reg[i] = '{opc:ZERO,default:0};  // reset to all zeros // default -> rest 
     end
     else if (load_en) begin
-      iw_reg[write_pointer] = '{opcode,operand_a,operand_b}; // daca val write pointer e prea mare va face overflow si va trunchia valoarea 
+      //added functionality ( opcode = 0 rez = 0; pass a, a ; add , a+b; )
+      case(opcode)
+  	    ZERO  : result = 0;
+        PASSA : result = operand_a;
+        PASSB : result = operand_b;
+        ADD   : result = operand_a + operand_b;
+        SUB   : result = operand_a - operand_b;
+        MULT  : result = operand_a * operand_b;
+        DIV   : result = operand_a / operand_b;
+        MOD   : result = operand_a % operand_b;
+     endcase
+      iw_reg[write_pointer] = '{opcode,operand_a,operand_b}; // if val write pointer is too big -> overflow will cut the value
     end
 
   // read from the register
@@ -43,8 +56,3 @@ end
 `endif
 
 endmodule: instr_register
-
-
-//pt data viitoare adaugare rez si functionalitate
-// opcode = 0 rez = 0; pass a, a ; add , a+b; 
-// + afisaj
