@@ -31,7 +31,7 @@ module top;
     .opcode(opcode),
     .write_pointer(write_pointer),
     .read_pointer(read_pointer),
-    .instruction_word(instruction_word)
+    .instruction_word(instruction_word),
     .result(result)
    );
 
@@ -45,7 +45,7 @@ module top;
     .opcode(opcode),
     .write_pointer(write_pointer),
     .read_pointer(read_pointer),
-    .instruction_word(instruction_word)
+    .instruction_word(instruction_word),
     .result(result)
    );
 
