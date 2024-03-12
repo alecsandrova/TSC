@@ -17,6 +17,7 @@ package instr_register_pkg;
   } opcode_t;
 
   typedef logic signed [31:0] operand_t;
+  typedef logic signed [63:0] result_t; //the result of multiplying two 32-bit numbers can be up to 64 bits long
   
   typedef logic [4:0] address_t;
   
@@ -24,7 +25,7 @@ package instr_register_pkg;
     opcode_t  opc;
     operand_t op_a;
     operand_t op_b;
-    operand_t res; // added result
+    result_t res;
   } instruction_t;
 
 endpackage: instr_register_pkg
