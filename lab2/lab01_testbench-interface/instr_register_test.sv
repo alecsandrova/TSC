@@ -21,15 +21,18 @@ module instr_register_test
   timeunit 1ns/1ns;
 
   int seed = 555;
-  parameter WR_NR = 20;
-  parameter RD_NR = 20;
+  parameter WR_NR = 3;
+  parameter RD_NR = 3;
+  parameter R_O = 0; //0 - increment; 1 - decrement; 
+  parameter W_O = 0; //0 - increment; 1 - decrement; 
   instruction_t  iw_reg_test [0:31];
+  parameter num_of_failed_tests = 0;
  
 
 
   initial begin
     $display("\n\n***********************************************************");
-    $display(    "***  THIS IS NOT A SELF-CHECKING TESTBENCH (YET).  YOU  ***");
+    $display(    "***  THIS IS A SELF-CHECKING TESTBENCH (YET).  YOU  ***");
     $display(    "***  NEED TO VISUALLY VERIFY THAT THE OUTPUT VALUES     ***");
     $display(    "***  MATCH THE INPUT VALUES FOR EACH REGISTER LOCATION  ***");
     $display(    "***********************************************************");
@@ -54,18 +57,31 @@ module instr_register_test
     // read back and display same three register locations
     $display("\nReading back the same register locations written...");
     // for (int i=0; i<=2; i++) begin A.N. 06/03/2024
+    if(W_O === 0)begin
       for (int i=0; i<=RD_NR; i++) begin
       // later labs will replace this loop with iterating through a
       // scoreboard to determine which addresses were written and
       // the expected values to be read back
       @(posedge clk) read_pointer = i;
       @(negedge clk) print_results;
-      @(negedge clk) check_results;
+      check_results;
+      end
     end
+    else if(W_O === 1) begin
+      for (int i=RD_NR; i>=0; i--) begin
+      // later labs will replace this loop with iterating through a
+      // scoreboard to determine which addresses were written and
+      // the expected values to be read back
+      @(posedge clk) read_pointer = i;
+      @(negedge clk) print_results;
+      check_results;
+      $display("  num of failed tests: = %0d\n", num_of_failed_tests)
+      end
+    end //gresit, se face cu 31-(i%32) -> to do: de reparat
 
     @(posedge clk) ;
     $display("\n***********************************************************");
-    $display(  "***  THIS IS NOT A SELF-CHECKING TESTBENCH (YET).  YOU  ***");
+    $display(  "***  THIS IS A SELF-CHECKING TESTBENCH (YET).  YOU  ***");
     $display(  "***  NEED TO VISUALLY VERIFY THAT THE OUTPUT VALUES     ***");
     $display(  "***  MATCH THE INPUT VALUES FOR EACH REGISTER LOCATION  ***");
     $display(  "***********************************************************\n");
@@ -84,21 +100,25 @@ module instr_register_test
     operand_t op_b;
     opcode_t  opc;
     int wp_t;
-
-    static int temp = 0; 
-
+    static int temp;
+    if(W_O === 0) temp = 0; // increment; for decrement  temp = 31
+    else if(W_O === 1)  temp = 31;
     op_a = $random(seed)%16; // between -15 and 15. 
     op_b = $unsigned($random)%16;  // between 0 and 15
     opc = opcode_t'($unsigned($random)%8);  // between 0 and 7
-    wp_t = temp++;
-
-
-
+    if(W_O === 0) wp_t = temp++;// increment; for decrement  temp--
+    else if(W_O === 1) wp_t = temp--;
     operand_a     <= op_a;                 
     operand_b     <= op_b;          
     opcode        <= opc; 
     write_pointer <= wp_t; 
-    iw_reg_test[wp_t] = '{opc,op_a,op_b,0}; 
+    iw_reg_test[wp_t] <= '{opc,op_a,op_b,0}; 
+    $display("TEST %0d: ", write_pointer);
+    $display("  opc = %0d (%s)", opc, opc.name);
+    $display("  op_a = %0d",   op_a);
+    $display("  op_b = %0d\n", op_b);
+    $display("  time = %0d\n", $time);
+
     
   endfunction: randomize_transaction
 
@@ -118,7 +138,7 @@ module instr_register_test
   endfunction: print_results
     
   function void check_results;
-    operand_res res;
+    result_t res;
     case(iw_reg_test[read_pointer].opc)
         ZERO: res = 0;
         PASSA: res = iw_reg_test[read_pointer].op_a;
@@ -135,8 +155,10 @@ module instr_register_test
     endcase
     if(res === instruction_word.res)
       $display("TEST PASSED\n", "DUT result = %0d\n", instruction_word.res,"TEST result = %0d\n", res);
-    else
+    else begin
       $display("TEST NOT PASSED \n", "DUT result = %0d\n", instruction_word.res,"TEST result = %0d\n", res);
+      num_of_failed_tests++;
+    end
   endfunction: check_results;
 
 endmodule: instr_register_test

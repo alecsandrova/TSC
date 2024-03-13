@@ -1,0 +1,5 @@
+# Ignore the work folder
+work/
+
+# Ignore the vsim.wlf file
+vsim.wlf
