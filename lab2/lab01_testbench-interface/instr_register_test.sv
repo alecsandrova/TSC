@@ -21,8 +21,8 @@ module instr_register_test
   timeunit 1ns/1ns;
 
   int seed = 555;
-  parameter WR_NR = 3;
-  parameter RD_NR = 3;
+  parameter WR_NR = 100;
+  parameter RD_NR = 100;
   parameter R_O = 0; //0 - increment; 1 - decrement; 2 - random;
   parameter W_O = 0; //0 - increment; 1 - decrement; 2 - random;
   static int failed_tests_number = 0;
@@ -34,7 +34,7 @@ module instr_register_test
 
   initial begin
     $display("\n\n***********************************************************");
-    $display(    "***  THIS IS A SELF-CHECKING TESTBENCH (YET).  YOU  ***");
+    $display(    "***  THIS IS A SELF-CHECKING TESTBENCH.  YOU  ***");
     $display(    "***  NEED TO VISUALLY VERIFY THAT THE OUTPUT VALUES     ***");
     $display(    "***  MATCH THE INPUT VALUES FOR EACH REGISTER LOCATION  ***");
     $display(    "***********************************************************");
@@ -70,12 +70,12 @@ module instr_register_test
       endcase
       @(negedge clk) print_results;
       check_results;
-      $display("Failed tests: %0d\n", failed_tests_number);
     end
+    $display("Failed tests: %0d\n", failed_tests_number);
 
     @(posedge clk) ;
     $display("\n***********************************************************");
-    $display(  "***  THIS IS A SELF-CHECKING TESTBENCH (YET).  YOU  ***");
+    $display(  "***  THIS IS A SELF-CHECKING TESTBENCH.  YOU  ***");
     $display(  "***  NEED TO VISUALLY VERIFY THAT THE OUTPUT VALUES     ***");
     $display(  "***  MATCH THE INPUT VALUES FOR EACH REGISTER LOCATION  ***");
     $display(  "***********************************************************\n");
