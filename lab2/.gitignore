@@ -1,5 +1,14 @@
-# Ignore the work folder
-work/
+# # Ignore the work folder
+# work/
+# # Ignore the vsim.wlf file
+# vsim.wlf
+# # Ignore the wlft_ files
+# wlft*
 
-# Ignore the vsim.wlf file
-vsim.wlf
+# Ignore the sim folder
+sim/
+
+
+# Ignore the pdf file
+SystemVerilog for Verification - A Guide to Learning the Testbench Language Features 3rd edition.pdf
+
