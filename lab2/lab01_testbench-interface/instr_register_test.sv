@@ -26,6 +26,7 @@ module instr_register_test
   parameter R_O = 0; //0 - increment; 1 - decrement; 2 - random;
   parameter W_O = 0; //0 - increment; 1 - decrement; 2 - random;
   static int failed_tests_number = 0;
+  parameter TEST_NAME = "default";
 
 
 
@@ -75,6 +76,7 @@ module instr_register_test
     $display("Failed tests: %0d\n", failed_tests_number);
 
     @(posedge clk) ;
+    final_report;
     $display("\n***********************************************************");
     $display(  "***  THIS IS A SELF-CHECKING TESTBENCH.  YOU  ***");
     $display(  "***  NEED TO VISUALLY VERIFY THAT THE OUTPUT VALUES     ***");
@@ -150,4 +152,25 @@ module instr_register_test
     end
   endfunction: check_results;
 
+
+  function void final_report;
+    int file;
+    file = $fopen("../reports/regression_status.txt", "a");
+    if(failed_tests_number != 0)
+    begin 
+      $fdisplay(file, "%s: FAILED", TEST_NAME);
+    end
+    else
+    begin 
+      $fdisplay(file, "%s: PASSED", TEST_NAME);
+    end
+    $fclose(file);
+
+    
+  endfunction:final_report
+
+
 endmodule: instr_register_test
+
+
+

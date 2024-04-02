@@ -8,6 +8,9 @@
 # Ignore the sim folder
 sim/
 
+# Ignore the reports folder
+reports/
+
 
 # Ignore the pdf file
 SystemVerilog for Verification - A Guide to Learning the Testbench Language Features 3rd edition.pdf
