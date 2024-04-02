@@ -62,9 +62,6 @@ module instr_register_test
     $display("\nReading back the same register locations written...");
     // for (int i=0; i<=2; i++) begin A.N. 06/03/2024
     for (int i = 0; i < RD_NR; i++) begin
-      // later labs will replace this loop with iterating through a
-      // scoreboard to determine which addresses were written and
-      // the expected values to be read back
       @(posedge clk) case(R_O)
         0: read_pointer = i % 32; 
         1: read_pointer = 31 - (i % 32);
@@ -86,14 +83,6 @@ module instr_register_test
   end
 
   function void randomize_transaction;
-    // A later lab will replace this function with SystemVerilog
-    // constrained random values
-    //
-    // The stactic temp variable is required in order to write to fixed
-    // addresses of 0, 1 and 2.  This will be replaceed with randomizeed
-    // write_pointer values in a later lab
-    //
-
     static int temp_up = 0;
     static int temp_down = 31;
     operand_a = $random(seed)%16; // between -15 and 15. 
@@ -168,8 +157,6 @@ module instr_register_test
 
     
   endfunction:final_report
-
-
 endmodule: instr_register_test
 
 
