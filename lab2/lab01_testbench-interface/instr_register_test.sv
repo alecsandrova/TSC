@@ -19,14 +19,15 @@ module instr_register_test
   );
 
   timeunit 1ns/1ns;
-
-  int seed = 555;
+  parameter seed_val;
+  int seed = seed_val;
   parameter WR_NR = 100;
   parameter RD_NR = 100;
   parameter R_O = 0; //0 - increment; 1 - decrement; 2 - random;
   parameter W_O = 0; //0 - increment; 1 - decrement; 2 - random;
   static int failed_tests_number = 0;
   parameter TEST_NAME = "default";
+  
 
 
 
